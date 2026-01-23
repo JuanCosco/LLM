@@ -1,3 +1,4 @@
+import json
 import cohere
 
 class LLMService:
@@ -7,17 +8,23 @@ class LLMService:
 
     def analyze_text(self, text: str) -> str:
         message=f"""
-Analiza el siguiente texto y determina si describe
-una tarea repetitiva o automatizable en una empresa.
+Analiza el siguiente texto que describe un proceso empresarial.
+
+Devuelve EXCLUSIVAMENTE un JSON válido con esta estructura:
+
+{{
+  "is_repetitive": boolean,
+  "automation_potential": "low" | "medium" | "high",
+  "justification": string
+}}
 
 Texto:
 {text}
-
-Devuelve una explicación breve.
 """
         response = self.client.chat(
             model="command-r-08-2024",
-            message=message
+            message=message,
+            temperature=0
         )
 
-        return response.text
+        return json.loads(response.text)
