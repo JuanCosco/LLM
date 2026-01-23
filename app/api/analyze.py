@@ -13,7 +13,7 @@ def analyze(request:AnalyzeRequest):
     llm_result = llm_service.analyze_text(request.text)
 
     return AnalyzeResponse(
-        received_text=request.text,
-        length=len(request.text),
+        received_text=llm_result,
+        length=len(llm_result),
         source=request.source
     )
