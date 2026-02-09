@@ -27,6 +27,48 @@ function renderResult(data) {
     </div>`;
 }
 
+function renderExcelResults(data) {
+    let rows = "";
+
+    data.results.forEach((item, index) => {
+        const badgeClass =
+            item.automation_potential === "high" ? "bg-danger" :
+            item.automation_potential === "medium" ? "bg-warning text-dark" :
+            "bg-success";
+
+        rows += `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${item.is_repetitive ? "Sí" : "No"}</td>
+            <td>
+                <span class="badge ${badgeClass}">
+                    ${item.automation_potential}
+                </span>
+            </td>
+            <td>${item.justification}</td>
+        </tr>`;
+    });
+
+    return `
+    <h5>Resultados (${data.total_rows} procesos)</h5>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>¿Repetitivo?</th>
+                    <th>Automatización</th>
+                    <th>Justificación</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows}
+            </tbody>
+        </table>
+    </div>`;
+}
+
+
 async function analyzeText() {
     const text = document.getElementById("textInput").value;
     const loading = document.getElementById("loading");
@@ -52,3 +94,31 @@ async function analyzeText() {
     result.innerHTML = renderResult(data);
 
 }
+
+async function analyzeExcel() {
+    const fileInput = document.getElementById("excelFile");
+    const loading = document.getElementById("excelLoading");
+    const result = document.getElementById("excelResult");
+
+    if (!fileInput.files.length) {
+        alert("Por favor, selecciona un archivo Excel.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    loading.classList.remove("d-none");
+    result.innerHTML = "";
+
+     const response = await fetch("/analyze/excel", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await response.json();
+
+    loading.classList.add("d-none");
+    result.innerHTML = renderExcelResults(data);
+}
+

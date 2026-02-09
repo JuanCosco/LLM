@@ -12,18 +12,20 @@
 
     <div class="card p-4">
         <div class="mb-3">
-            <label class="form-label">Descripción del proceso</label>
-            <textarea id="textInput" class="form-control" rows="4"></textarea>
+            <label class="form-label">Subir archivo Excel</label>
+            <input type="file" id="excelFile" class="form-control" accept=".xlsx,.xls">
         </div>
 
-        <button class="btn btn-primary" onclick="analyzeText()">Analizar</button>
+        <button class="btn btn-success" onclick="analyzeExcel()">
+            Analizar Excel
+        </button>
 
-        <div id="loading" class="mt-3 text-primary d-none">
-            Analizando proceso...
+        <div id="excelLoading" class="mt-3 text-success d-none">
+            Analizando archivo Excel. Por favor, espere...
         </div>
     </div>
 
-    <div id="result" class="mt-4"></div>
+    <div id="excelResult" class="mt-4"></div>
 </div>
 
 <script src="/static/js/main.js"></script>
