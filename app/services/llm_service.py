@@ -2,6 +2,7 @@ import cohere
 import asyncio
 import json
 
+
 class LLMService:
 
     def __init__(self, api_key):
@@ -23,30 +24,25 @@ Campos:
 
 Texto:
 {text}
-"""
-    )
+""",
+        )
 
         raw = response.text.strip()
-    
+
         if raw.startswith("```"):
             raw = raw.replace("```json", "").replace("```", "").strip()
 
         try:
             return json.loads(raw)
         except json.JSONDecodeError:
-        # logging defensivo (muy importante)
+            # logging defensivo (muy importante)
             return {
                 "received_text": text,
                 "is_repetitive": False,
                 "automation_potential": 0,
-                "justification": "Error parsing LLM response"
-        }
-
+                "justification": "Error parsing LLM response",
+            }
 
     async def analyze_process(self, text: str):
         loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(
-            None,
-            self.analyze_process_sync,
-            text
-            )
+        return await loop.run_in_executor(None, self.analyze_process_sync, text)

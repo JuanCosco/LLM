@@ -8,8 +8,9 @@ router = APIRouter()
 
 llm_service = LLMService(api_key=OPENAI_API_KEY)
 
+
 @router.post("/analyze", response_model=AnalysisResult)
-def analyze(request:AnalyzeRequest):
+def analyze(request: AnalyzeRequest):
 
     llm_result = llm_service.analyze_text(request.text)
     return llm_result
